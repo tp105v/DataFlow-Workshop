@@ -1,0 +1,195 @@
+[
+    {
+        "id": "cc1aa85f.a2e148",
+        "type": "comment",
+        "z": "126fa23f.37841e",
+        "name": "README",
+        "info": "This `custom-adapter` template is designed to\nbe used as the starting point for a custom DataFlow\nadapter. An adapter converts a device protocol to\nthe broker's standard ingestion format. The\n`DataFlow OUT` node will push data to the broker's\n`input` node that is defined in this adapter's\n`publishTo` property of the project spec.\n\nIf you've added custom `properties` in your\nproject specification, those properties will\nbe available within any function node as\n`context.global.properties`.\n",
+        "x": 115.8125,
+        "y": 186,
+        "wires": []
+    },
+    {
+        "id": "e5399307.436f",
+        "type": "dataflow-out",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "x": 666.8125,
+        "y": 304,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a060807.2049d8",
+        "type": "http in",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "url": "/demo",
+        "method": "post",
+        "username": "",
+        "password": "",
+        "authType": "noAuth",
+        "useAuth": false,
+        "useOauth": false,
+        "encryption": "none",
+        "realm": "",
+        "clientId": "",
+        "clientSecret": "",
+        "site": "",
+        "authorizationPath": "/oauth/authorize",
+        "tokenPath": "/oauth/access_token",
+        "scope": "",
+        "encryptObj": [
+            "username",
+            "password",
+            "clientId",
+            "clientSecret"
+        ],
+        "swaggerDoc": "",
+        "x": 130.546875,
+        "y": 316,
+        "wires": [
+            [
+                "5b5a2b29.705544",
+                "e6a84b30.01f928",
+                "6f5eb806.160858"
+            ]
+        ]
+    },
+    {
+        "id": "5b5a2b29.705544",
+        "type": "function",
+        "z": "126fa23f.37841e",
+        "name": "Store data in registry",
+        "func": "input = msg.payload;\n\ndata = {};\nif (input.hasOwnProperty(\"id\")){\n    data.id = input.id;\n}\nif (input.hasOwnProperty(\"lightLevel\")){\n    data.lightLevel = parseFloat(input.lightLevel);\n}\nif (input.hasOwnProperty(\"resistance\")){\n    data.resistance = parseFloat(input.resistance);\n}\n\nif (input.hasOwnProperty(\"threshold\")){\n    data.threshold = parseFloat(input.threshold);\n}\n\ntimestamp = new Date().toISOString();\n\nmsg.payload = {\n    \"class\": context.global.properties._class,\n    \"object\": input.id,\n    \"timestamp\": timestamp,\n    \"data\": data\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "dependencies": [],
+        "x": 410.546875,
+        "y": 307,
+        "wires": [
+            [
+                "e5399307.436f",
+                "1cba0143.73c4ff"
+            ]
+        ]
+    },
+    {
+        "id": "e6a84b30.01f928",
+        "type": "http response",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "x": 250.546875,
+        "y": 384,
+        "wires": []
+    },
+    {
+        "id": "1cba0143.73c4ff",
+        "type": "debug",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "active": true,
+        "console": "true",
+        "complete": "payload",
+        "x": 600.546875,
+        "y": 374,
+        "wires": []
+    },
+    {
+        "id": "a87a00a5.27f58",
+        "type": "function",
+        "z": "126fa23f.37841e",
+        "name": "Email Trigger",
+        "func": "input = msg.payload;\n\nmsg.event = \"light_sensor\";\n\nlight = input.lightLevel;\nthreshold = input.threshold;\nresistance = input.resistance;\n\nif (resistance < threshold) {\n    msg.payload = {\"value1\" : light, \"value2\" : threshold, \"value3\" : resistance};\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "dependencies": [],
+        "x": 920.015625,
+        "y": 216,
+        "wires": [
+            [
+                "c791f8e6.dbb498"
+            ]
+        ]
+    },
+    {
+        "id": "c791f8e6.dbb498",
+        "type": "http request",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "useAuth": false,
+        "username": "",
+        "password": "",
+        "encryption": "none",
+        "encryptObj": [
+            "username",
+            "password"
+        ],
+        "timeout": "",
+        "method": "POST",
+        "ret": "txt",
+        "url": "https://maker.ifttt.com/trigger/{{event}}/with/key/d4W_5vmTpgBLYQM4k3FB3",
+        "tls": "",
+        "acceptUnauthorizedRequest": false,
+        "x": 1100.015625,
+        "y": 215,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa0dc58c.220648",
+        "type": "switch",
+        "z": "126fa23f.37841e",
+        "name": "Switch Node",
+        "property": "payload.bool",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 681.015625,
+        "y": 218,
+        "wires": [
+            [
+                "a87a00a5.27f58"
+            ]
+        ]
+    },
+    {
+        "id": "6f5eb806.160858",
+        "type": "function",
+        "z": "126fa23f.37841e",
+        "name": "Switch",
+        "func": "input = msg.payload;\n\nresistance = input.resistance;\nthreshold = input.threshold;\n\nif (resistance < threshold){\n    msg.payload.bool = \"true\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "dependencies": [],
+        "x": 473.015625,
+        "y": 218,
+        "wires": [
+            [
+                "aa0dc58c.220648",
+                "99c3beb9.877f4"
+            ]
+        ]
+    },
+    {
+        "id": "99c3beb9.877f4",
+        "type": "debug",
+        "z": "126fa23f.37841e",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 651.015625,
+        "y": 152,
+        "wires": []
+    }
+]

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DataFlow Workshop</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+        html, body {
+        min-height: 100%;
+        }
+        body, div, form, p { 
+        padding: 0;
+        margin: 0;
+        outline: none;
+        font-family: Roboto, Arial, sans-serif;
+        font-size: 18px;
+        color: #000000;
+        line-height: 28px;
+        text-align: center;
+        }
+        h1 {
+        max-width: 345px;
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 50px;
+        }
+        h2{
+        max-width: 345px;
+        width: 80%;
+        margin: 0 auto;
+        text-align: right; 
+        color: #00c9ff; /*AT&T Blue*/
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 30px;
+        }
+        h3 {
+        max-width: 345px;
+        width: 80%;
+        margin: 10px auto 0 auto;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 450;
+        }
+        h1, h2 {
+        font-weight: 400;
+        }
+        .testbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: inherit;
+        padding: 3px;
+        }
+        form {
+        width: 100%;
+        padding: 20px;
+        background: #fff;
+        box-shadow: 0 2px 5px #ccc; 
+        margin-top: 5%;
+        margin-bottom: 5%;
+        }
+        .content-wrap {
+        max-width: 950px;
+        width: 65%;
+        margin: 0 auto;
+        } 
+        .row {
+            display: flex;
+        }
+        .column {
+            flex: 50%;
+            padding: 5px;
+            height: 350px;
+            overflow: visible;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="testbox content-wrap">
+    <form>
+        <h1>AT&amp;T DataFlow</h1>
+        <h2>Workshop</h2>
+        <p>Congratulations! You've created a website through the DataFlow platform.</p>
+        <div class="row">
+            <div class="column">
+                <h3>Current Threshold</h3>
+                <iframe src="paste Current Threshold widget URL here" height="250px" width=100%></iframe>
+            </div>
+            <div class="column">
+                <h3>Light Level over Time</h3>
+                <iframe src="paste Light Level over Time widget URL here" height="250px" width="100%"></iframe>
+            </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>  

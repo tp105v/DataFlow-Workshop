@@ -1,0 +1,42 @@
+apiVersion: 0
+classes:
+  demoPi:
+    streams:
+      id:
+        type: text
+      lightLevel:
+        type: number
+        unit:
+          name: lux
+          symbol: lx
+      resistance:
+        type: number
+        unit:
+          name: ohm
+          symbol: Ω
+      threshold:
+        name: Threshold
+        comment: This is the threshold value for the light sensor.
+        type: number
+    commands:
+      setSignalThreshold:
+        request:
+          threshnumber:
+            name: Threshold Number
+            type: number
+        name: Set Signal Threshold
+        comment: >-
+          Sets a light level threshold for the light indicator to light up.
+          Value can range from 10 - 20, where 10 is less sensitive to light, and
+          20 is more. 
+    adapter:
+      template: custom-adapter 
+      publishTo: input
+      count: 2
+architecture:
+  input:
+    type: input
+  storage:
+    type: storage
+    from:
+      - input
